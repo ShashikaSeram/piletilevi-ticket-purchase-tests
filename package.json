@@ -1,11 +1,11 @@
 {
- "name": "piletilevi-ticket-purchase-tests",
+  "name": "piletilevi-ticket-purchase-tests",
   "scripts": {
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run --config-file cypress-e2e/prelive.cypress.config.js",
+    "cypress:run": "cypress run --config-file cypress-e2e/cypress.config.js",
     "cypress:run:prelive": "cypress run"
-  },
+  }, 
   "devDependencies": {
-    "cypress": "^12.13.0"
+    "cypress": "^12.14.0"
   }
 }
