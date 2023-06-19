@@ -1,1 +1,17 @@
+name: End-to-end tests
+on:
+  push:
 
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitCode
+        uses: actions/checkout@v2
+
+      - name: Run Cypress Test
+        uses: cypress-io/github-action@v4
+        continue-on-error: true
+        with:
+          command: npx cypress run
+          browser: chrome
