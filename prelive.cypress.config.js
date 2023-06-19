@@ -2,7 +2,7 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   e2e: {
-    supportFile: 'cypress-e2e/cypress/support/e2e.js',
+    //supportFile: 'cypress-e2e/cypress/support/e2e.js',
     specPattern: 'cypress-e2e/cypress/e2e/*.cy.{js,jsx,ts,tsx}',
     fixturesFolder: 'cypress-e2e/cypress/fixtures',
     experimentalOriginDependencies: true,
