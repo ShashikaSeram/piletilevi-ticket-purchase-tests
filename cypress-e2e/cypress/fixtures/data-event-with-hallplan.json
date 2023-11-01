@@ -1,9 +1,11 @@
 {
-  "eventName": "Zaz - Organique Tour",
-  "eventVenue": "Alexela Kontserdimaja, Tallinn",
-  "ticketQuantity": "1 tickets",
-  "ticketPrice": "144.20 €",
-  "email": "test1@piletilevi.ee",
-  "ownerName": "test,abc"
-
+  "eventName": "Automated Test Event / Event with several price zones / Event with sector selection",
+  "eventWithDifferentPrices": "Automated Test Event / Event with few locations or dates / Event 2",
+  "ticketQuantity1": "1 tickets",
+  "ticketQuantity2": "2 tickets",
+  "email": "test4@piletilevi.ee",
+  "firstTicket": "0",
+  "secondTicket": "1",
+  "ticketCount": "2"
 }
+

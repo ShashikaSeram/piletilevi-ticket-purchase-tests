@@ -1,4 +1,5 @@
 /// <reference types="Cypress" />
+
 let span = 'span'
 let headingName = 'Send ticket'
 let toEmailButton = '[id="mat-tab-label-2-0"]'
@@ -19,6 +20,10 @@ let button = 'button'
 let checkoutButton = 'Proceed to checkout'
 let selectedCountryValue = '[class="select-value"]'
 let dropDownList = '[class="dropdown-list dropdown-open"]'
+let parcelMachineButton = '[class="select-toggle-omnivaautomaat select-button select-toggle"]'
+let parcelMachine = '[class="list-item-omnivaautomaat ng-star-inserted"]'
+let userAccountIcon = '[class="user-account-icon ng-star-inserted"]'
+
 export class DeliveryPage{
   static verifyDeliveryPage() {
     cy.get(span).contains(headingName).should('be.visible');
@@ -35,6 +40,9 @@ export class DeliveryPage{
   static enterEmailAddress(email) {
     cy.get(emailField).type(email);
   }
+  static verifyUserEmailIsAlreadyEntered(userEmail) {
+    cy.get(emailField).should('have.value',userEmail);
+  }
   static enterName(firstName,lastName) {
     cy.get(firstNameField).type(firstName);
     cy.get(lastNameField).type(lastName);
@@ -45,9 +53,9 @@ export class DeliveryPage{
   static enterPhoneNumber(phoneNumber) {
     cy.get(phoneNumberField).type(phoneNumber);
   }
-  static chooseFirstParcelMachine(parcelMachineName) {
-    cy.get(button).contains('Choose parcel machine').click();
-    cy.get(dropDownList).contains(parcelMachineName).click();
+  static chooseFirstParcelMachine() {
+    cy.get(parcelMachineButton).click();
+    cy.get(dropDownList).children(parcelMachine).eq(0).click();
   }
   static enterAddressDetails(deliveryAddress,cityName,postalCode,regionName){
     cy.get(addressField).type(deliveryAddress)
@@ -70,14 +78,7 @@ export class DeliveryPage{
     cy.get(internationalPostDelivery).click()
     cy.get(internationalPostDelivery).should('have.attr','aria-expanded','true');
   }
-  static getOmnivaDeliveryCost(){
-    cy.get('class="ng-star-inserted"').contains('Omniva parcel machine').invoke('text')
-      .then((text) => {
-        let deliveryCost;
-        deliveryCost = parseFloat(text.match(/\d+\.\d+/)[0]);
-        return deliveryCost;
-  })
+  static clickUserAccountIcon(){
+    cy.get(userAccountIcon).eq(0).click();
   }
-
-
-  }
+}

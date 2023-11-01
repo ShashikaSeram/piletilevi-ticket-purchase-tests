@@ -1,22 +1,20 @@
 {
-
-"eventName": "Huumoriteater ''ENSV kohvik''",
-"eventVenue": "Huumoriteater ENSV kohvik, Tallinn",
-"ticketQuantity1": "1 tickets",
-"ticketQuantity2": "2 tickets",
-"ticketPrice": "46.20 €",
-"email": "test1@piletilevi.ee",
-"firstName": "test",
-"lastName": "abc",
-"remarks": "Adding Remarks",
-"phoneNumber": "1234567",
-"parcelMachineName": "1. eelistus/Parcelsea nutipostkast",
-"deliveryAddress": "101 test aAddress",
-"cityName": "test city",
-"postalCode": "101010",
-"regionName": "test country"
-
-}
+    "eventName": "Automated Test Event / General event",
+    "ticketQuantity1": "1 tickets",
+    "ticketQuantity2": "2 tickets",
+    "email": "test4@piletilevi.ee",
+    "firstName": "test",
+    "lastName": "abc",
+    "remarks": "Adding Remarks",
+    "phoneNumber": "6310282",
+    "deliveryAddress": "101 test aAddress",
+    "cityName": "test city",
+    "postalCode": "101010",
+    "regionName": "test country",
+    "firstTicket": "0",
+    "secondTicket": "1"
+    }
+    
 
 
 

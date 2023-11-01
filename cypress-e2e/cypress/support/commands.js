@@ -10,8 +10,9 @@
 // ***********************************************
 import { HomePage } from '../support/pages/home-page.js'
 import {EventPage} from '../support/pages/event-page.js';
-//import {PaymentPage} from '..support/pages/payment-page.js';
 import {Utils} from '../support/util.js';
+import {TIMEOUT_SHORT} from "./constants";
+import {LoginPage} from "./pages/login-page";
 //
 // -- This is a parent command --
 // Cypress.Commands.add('login', (email, password) => { ... })
@@ -36,10 +37,19 @@ Cypress.Commands.add('searchAndSelectEvent', (eventName) => {
     HomePage.searchEventByName(eventName);
     EventPage.clickOnSearchedEvent(eventName);
 })
-Cypress.Commands.add('clickBuyTicket', (venue) => {
-  EventPage.verifySelectedEventIsCorrect(venue);
+Cypress.Commands.add('clickBuyTicket', (eventName) => {
+  EventPage.verifySelectedEventIsCorrect(eventName);
   EventPage.clickBuyButton();
 })
-// Cypress.Commands.add('visitPaymentGateway', () => {
-//   PaymentPage.navigateToPaymentGateway();
-// })
+Cypress.Commands.add('selectFirstAvailableSubTicket', () => {
+  EventPage.selectFirstAvailableSubTicket();
+})
+Cypress.Commands.add('logInToPortal',(email,password) => {
+  HomePage.clickUserAccountIcon();
+  LoginPage.verifyLoginView();
+  LoginPage.enterLoginDetails(email,password);
+  LoginPage.clickLogInButton();
+})
+
+
+

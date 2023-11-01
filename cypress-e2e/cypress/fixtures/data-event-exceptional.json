@@ -1,0 +1,22 @@
+{
+    "eventMandatoryPersonalization": "Automated Test Event / Event with mandatory personalization",
+    "eventOptionalPersonalization": "Automated Test Event / Event with optional personalization",
+    "eventWithAdditionalFee" : "Automated Test Event / Event with agent fee + venue fee",
+    "eventPackagePurchase": "Automated Test Event / Linked events (package purchase)",
+    "eventPromoCode": "Automated test event/promo code",
+    "ticketQuantity1": "1 tickets",
+    "ticketQuantity2": "2 tickets",
+    "ticketQuantity3": "3 tickets",
+    "personName": "test,name",
+    "phoneNumber": "6310282",
+    "expressUserEmail": "test4@piletilevi.ee",
+    "loggedInUserEmail": "test5@piletilevi.ee",
+    "loggedInUserName": "Test Promo",
+    "password": "Test1234",
+    "firstTicket": "0",
+    "secondTicket": "1",
+    "ticketCount2": "2",
+    "ticketCount3": "3",
+    "promoCode": "promo"
+  }
+  
