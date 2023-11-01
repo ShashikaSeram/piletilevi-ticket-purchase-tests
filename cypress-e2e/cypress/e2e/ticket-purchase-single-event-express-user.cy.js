@@ -1,12 +1,12 @@
 /// <reference types="Cypress" />
+
 import { HomePage } from '../support/pages/home-page.js'
 import {TicketsSelectionPage} from "../support/pages/tickets-selection-page.js";
 import {DeliveryPage} from "../support/pages/delivery-page.js";
-import {TicketPersonalizationPage} from "../support/pages/ticket-personalization-page.js";
 import {ShoppingCartPage} from "../support/pages/shopping-cart-page.js"
 import {Utils} from '../support/util';
 
-describe('Ticket purchasing scenarios for all types of tickets', () => {
+describe('Ticket purchase flow - single event', () => {
   before(() => {
     HomePage.setCookieConsent();
     HomePage.authorizeHelmsStore();
@@ -16,124 +16,158 @@ describe('Ticket purchasing scenarios for all types of tickets', () => {
   HomePage.navigateToHomePage();
   })
 
-  it('Verify purchase process for an event with a hall plan - no seat selection + skip ticket personalization', () => {
+  it('Purchase a ticket without selecting a seat', () => {
     cy.fixture('data-event-with-hallplan.json').as('eventData')
     cy.get('@eventData').then((eventData) => {
       let eventName = eventData.eventName
-      let eventVenue = eventData.eventVenue
-      let ticketPrice = eventData.ticketPrice
-      let ticketQuantity = eventData.ticketQuantity
-      let totalPrice = eventData.ticketPrice
+      let ticketQuantity1 = eventData.ticketQuantity1
       let email = eventData.email
-      let ownerName = eventData.ownerName
-      cy.origin(Cypress.env('portal_host'), {args: {eventName, eventVenue}}, ({eventName, eventVenue}) => {
+      let firstAvailableTicket = eventData.firstTicket
+      cy.origin(Cypress.env('portal_host'), {args: {eventName}}, ({eventName}) => {
         Cypress.require('../support/commands.js')
         cy.verifyHomePage();
         cy.searchAndSelectEvent(eventName);
-        cy.clickBuyTicket(eventVenue);
+        cy.clickBuyTicket(eventName);
       })
       TicketsSelectionPage.verifyTicketsSelectionPage();
-      TicketsSelectionPage.selectSectorAndAddTicket(ticketPrice);
-      TicketsSelectionPage.verifyAddedTicketsQuantityAndTotalSum(ticketQuantity, totalPrice);
+      TicketsSelectionPage.selectFirstSector();
+      TicketsSelectionPage.addTicket(firstAvailableTicket);
+      TicketsSelectionPage.verifyTicketCount(ticketQuantity1)
+      TicketsSelectionPage.validateFirstTotalForEventWithSeatPlan();
       TicketsSelectionPage.clickFindTicketsButton();
       TicketsSelectionPage.verifySeatsOfferedViewIsPresent();
       TicketsSelectionPage.verifyRowNumberIsAssigned();
       TicketsSelectionPage.verifySeatNumberIsAssigned();
-      TicketsSelectionPage.verifyTicketDetailsBeforeConfirmAll(ticketQuantity,totalPrice);
-      TicketsSelectionPage.clickSecondConfirmAllButton();
+      TicketsSelectionPage.verifyTicketCountBeforeConfirmAll(ticketQuantity1);
+      TicketsSelectionPage.validateSecondTotalForEventWithSeatPlan();
+      TicketsSelectionPage.clickConfirmAllButton();
       DeliveryPage.verifyDeliveryPage();
       DeliveryPage.verifyToEmailDeliveryMethodIsAlreadySelected();
       DeliveryPage.enterEmailAddress(email);
       DeliveryPage.clickProceedToCheckout();
-      TicketPersonalizationPage.verifyPersonalizationPage();
-      TicketPersonalizationPage.skipPersonalization();
-      ShoppingCartPage.verifyShoppingCartPage(ticketQuantity);
+      ShoppingCartPage.verifyShoppingCartPage(ticketQuantity1);
       ShoppingCartPage.verifyAddInsuranceIsAvailable();
       ShoppingCartPage.verifyBothPaymentMethodsAreDisplayed();
       ShoppingCartPage.selectVisaPaymentMethod();
       ShoppingCartPage.tickAgreementCheckbox();
-      // TODO click buy button
-      // ShoppingCartPage.clickPayButton(totalPrice);
-      // cy.origin('igw-demo.every-pay.com',() => {
-      //   cy.visit('https://igw-demo.every-pay.com/lp/')
-      //   })
+      ShoppingCartPage.verifyCorrectTotalIsDisplayedInPayButton();
     })
   })
 
-  it('Verify purchase process for an event with a hall plan + ticket personalization - with seat selection', () => {
+  it('Purchase a ticket selecting a seat number', () => {
     cy.fixture('data-event-with-hallplan.json').as('eventData')
     cy.get('@eventData').then((eventData) => {
       let eventName = eventData.eventName
-      let eventVenue = eventData.eventVenue
-      let ticketQuantity = eventData.ticketQuantity
+      let ticketQuantity1 = eventData.ticketQuantity1
       let email = eventData.email
-      let ownerName = eventData.ownerName
-      cy.origin(Cypress.env('portal_host'), {args: {eventName, eventVenue}}, ({eventName, eventVenue}) => {
+      cy.origin(Cypress.env('portal_host'), {args: {eventName}}, ({eventName}) => {
         Cypress.require('../support/commands.js')
         cy.verifyHomePage();
         cy.searchAndSelectEvent(eventName);
-        cy.clickBuyTicket(eventVenue);
+        cy.clickBuyTicket(eventName);
       })
       TicketsSelectionPage.verifyTicketsSelectionPage();
+      TicketsSelectionPage.selectFirstSector();
       //TODO need to compare picked seat number with the one under seats offered details
       TicketsSelectionPage.pickASeatAndVerifyPickedSeatNumberIsShown();
       TicketsSelectionPage.verifySeatsOfferedViewIsPresent();
       TicketsSelectionPage.verifyRowNumberIsAssigned();
-      TicketsSelectionPage.confirmSelectedTicketDetails();
-      TicketsSelectionPage.clickSecondConfirmAllButton();
+      TicketsSelectionPage.verifySeatNumberIsAssigned();
+      TicketsSelectionPage.validateTotalForTicketsPickedFromVenueMap();
+      TicketsSelectionPage.clickConfirmAllButton();
       DeliveryPage.verifyDeliveryPage();
       DeliveryPage.verifyToEmailDeliveryMethodIsAlreadySelected();
       DeliveryPage.enterEmailAddress(email);
       DeliveryPage.clickProceedToCheckout();
-      TicketPersonalizationPage.verifyPersonalizationPage();
-      TicketPersonalizationPage.enterName(ownerName);
-      TicketPersonalizationPage.tickCheckBox();
-      TicketPersonalizationPage.clickNextButton();
-      ShoppingCartPage.verifyShoppingCartPage(ticketQuantity);
+      ShoppingCartPage.verifyShoppingCartPage(ticketQuantity1);
       ShoppingCartPage.verifyAddInsuranceIsAvailable();
       ShoppingCartPage.verifyBothPaymentMethodsAreDisplayed();
       ShoppingCartPage.selectVisaPaymentMethod();
       ShoppingCartPage.tickAgreementCheckbox();
-      //TODO click buy button
+      ShoppingCartPage.verifyCorrectTotalIsDisplayedInPayButton();
     })
   })
 
-  it('Verify purchase process for a general event(multiple tickets) - Selecting multiple tickets from the same event(same ticket type)', () => {
-    cy.fixture('data-event-general.json').as('eventData')
+  it('Purchase multiple tickets with same price', () => {
+    cy.fixture('data-event-with-hallplan.json').as('eventData')
     cy.get('@eventData').then((eventData) => {
       let eventName = eventData.eventName
-      let eventVenue = eventData.eventVenue
-      let ticketPrice = eventData.ticketPrice
+      let ticketQuantity1 = eventData.ticketQuantity1
       let ticketQuantity2 = eventData.ticketQuantity2
-      let totalPrice = eventData.ticketPrice
       let email = eventData.email
-      cy.origin(Cypress.env('portal_host'), {args: {eventName, eventVenue}}, ({eventName, eventVenue}) => {
+      let firstAvailableTicket = eventData.firstTicket
+      let ticketCount = eventData.ticketCount
+      cy.origin(Cypress.env('portal_host'), {args: {eventName}}, ({eventName}) => {
         Cypress.require('../support/commands.js')
         cy.verifyHomePage();
         cy.searchAndSelectEvent(eventName);
-        cy.clickBuyTicket(eventVenue);
+        cy.clickBuyTicket(eventName);
       })
       TicketsSelectionPage.verifyTicketsSelectionPage();
-      TicketsSelectionPage.addFirstAvailableTicket();
-      TicketsSelectionPage.addFirstAvailableTicket();
+      TicketsSelectionPage.selectFirstSector();
+      TicketsSelectionPage.addTicket(firstAvailableTicket);
+      TicketsSelectionPage.verifyTicketCount(ticketQuantity1);
+      TicketsSelectionPage.addSecondTicketAndVerifyPriceForTwo(firstAvailableTicket);
       TicketsSelectionPage.verifyTicketCount(ticketQuantity2)
-      //TicketsSelectionPage.verifyAddedTicketPriceIsCorrect();
-      // TicketsSelectionPage.clickConfirmAllButton();
-      // TicketsSelectionPage.verifySeatsOfferedViewIsPresent();
-      // TicketsSelectionPage.confirmSelectedTicketDetails();
-      // TicketsSelectionPage.clickSecondConfirmAllButton();
-      // DeliveryPage.verifyDeliveryPage();
-      // DeliveryPage.verifyToEmailDeliveryMethodIsAlreadySelected();
-      // DeliveryPage.enterEmailAddress(email);
-      // DeliveryPage.clickProceedToCheckout();
-      // ShoppingCartPage.verifyShoppingCartPage(ticketQuantity);
-      // ShoppingCartPage.verifyAddInsuranceIsAvailable();
-      // ShoppingCartPage.verifyBothPaymentMethodsAreDisplayed();
-      // ShoppingCartPage.selectVisaPaymentMethod();
-      // ShoppingCartPage.tickAgreementCheckbox();
+      TicketsSelectionPage.clickFindTicketsButton();
+      TicketsSelectionPage.verifySeatsOfferedViewIsPresent();
+      TicketsSelectionPage.verifySeatsDetailForMultipleTickets();
+      TicketsSelectionPage.verifyTicketCountBeforeConfirmAll(ticketQuantity2);
+      TicketsSelectionPage.confirmTotalPriceForTwo();
+      TicketsSelectionPage.clickConfirmAllButton();
+      DeliveryPage.verifyDeliveryPage();
+      DeliveryPage.verifyToEmailDeliveryMethodIsAlreadySelected();
+      DeliveryPage.enterEmailAddress(email);
+      DeliveryPage.clickProceedToCheckout();
+      ShoppingCartPage.verifyShoppingCartPage(ticketQuantity2);
+      ShoppingCartPage.verifyMultipleTicketsAreDisplayedInShoppingCart(ticketCount)
+      ShoppingCartPage.verifyAddInsuranceToAllIsAvailable();
+      ShoppingCartPage.verifyBothPaymentMethodsAreDisplayed();
+      ShoppingCartPage.selectVisaPaymentMethod();
+      ShoppingCartPage.tickAgreementCheckbox();
+      ShoppingCartPage.verifyCorrectTotalIsDisplayedInPayButton();
     })
   })
 
+  it('Purchase multiple tickets with different prices', () => {
+    cy.fixture('data-event-with-hallplan.json').as('eventData')
+    cy.get('@eventData').then((eventData) => {
+      let eventName = eventData.eventWithDifferentPrices
+      let ticketQuantity2 = eventData.ticketQuantity2
+      let email = eventData.email
+      let firstAvailableTicket = eventData.firstTicket
+      let secondAvailableTicket = eventData.secondTicket
+      let ticketCount = eventData.ticketCount
+      cy.origin(Cypress.env('portal_host'), {args: {eventName}}, ({eventName}) => {
+        Cypress.require('../support/commands.js')
+        cy.verifyHomePage();
+        cy.searchAndSelectEvent(eventName);
+        cy.clickBuyTicket(eventName);
+      })
+      TicketsSelectionPage.verifyTicketsSelectionPage();
+      TicketsSelectionPage.addTicketByType(firstAvailableTicket);
+      TicketsSelectionPage.addTicketByType(secondAvailableTicket);
+      TicketsSelectionPage.verifyTicketCount(ticketQuantity2)
+      TicketsSelectionPage.validateFirstTotalForTwoTickets();
+      TicketsSelectionPage.clickFindTicketsButton();
+      TicketsSelectionPage.verifySeatsOfferedViewIsPresent();
+      TicketsSelectionPage.verifySeatsDetailForMultipleTickets();
+      TicketsSelectionPage.verifyTicketCountBeforeConfirmAll(ticketQuantity2);
+      TicketsSelectionPage.validateSecondTotalForTwoTickets();
+      TicketsSelectionPage.clickConfirmAllButton();
+      DeliveryPage.verifyDeliveryPage();
+      DeliveryPage.verifyToEmailDeliveryMethodIsAlreadySelected();
+      DeliveryPage.enterEmailAddress(email);
+      DeliveryPage.clickProceedToCheckout();
+      ShoppingCartPage.verifyShoppingCartPage(ticketQuantity2);
+      ShoppingCartPage.verifyMultipleTicketsAreDisplayedInShoppingCart(ticketCount)
+      ShoppingCartPage.verifyAddInsuranceToAllIsAvailable();
+      ShoppingCartPage.verifyBothPaymentMethodsAreDisplayed();
+      ShoppingCartPage.selectVisaPaymentMethod();
+      ShoppingCartPage.tickAgreementCheckbox();
+      ShoppingCartPage.verifyCorrectTotalIsDisplayedInPayButton();
+    })
+})
 
 
 })
