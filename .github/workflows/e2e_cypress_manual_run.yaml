@@ -17,7 +17,7 @@ jobs:
         uses: cypress-io/github-action@v5
         continue-on-error: true
         with:
-          working-directory: piletilevi-ticket-purchase-tests
+          working-directory: ./scripts
           browser: chrome
           record: true
           parallel: false # Runs test in parallel using settings above
@@ -46,9 +46,3 @@ jobs:
         with:
           name: cypress-har
           path: shop/cypress-e2e/hars
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18.13.0
-          cache: "npm"
