@@ -1,5 +1,5 @@
-const { defineConfig } = require("cypress");
-const { install } = require('@neuralegion/cypress-har-generator');
+const { defineConfig } = require('cypress');
+const { install,ensureBrowserFlags } = require('@neuralegion/cypress-har-generator');
 
 module.exports = defineConfig({
   projectId: "ujkfmw",
@@ -12,8 +12,12 @@ module.exports = defineConfig({
     experimentalOriginDependencies: true,
     chromeWebSecurity: false,
     baseUrl: 'https://store.piletilevi.test.helmes.ee/public/en',
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on) {
       install(on);
+      on('before:browser:launch', (browser = {}, launchOptions) => {
+        ensureBrowserFlags(browser, launchOptions);
+        return launchOptions;
+      });
     },
     env: {
       portal_url: 'https://test.piletilevi.ee/eng/',

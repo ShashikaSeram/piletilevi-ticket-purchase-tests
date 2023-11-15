@@ -8,8 +8,8 @@ let shoppingCartButton = '[class="basket_status active"]'
 let ticketViewTab = '[class="mdc-tab__text-label"]'
 export class UserAccountPage{
   static verifyUserIsInMyAccountPage(){
-    cy.get(pageHeading).contains('My settings').should('be.visible');
-    cy.get(sideMenuButton).contains('My account').should('have.class', 'list-link list-link-active');
+    cy.get(pageHeading).contains('My account').should('be.visible');
+    cy.get(sideMenuButton).contains('Account settings').should('have.class', 'list-link list-link-active');
   }
   static verifyUserDetailsInAccountMenu(userName,userEmail){
     cy.get(userNameField).should('contain', userName);

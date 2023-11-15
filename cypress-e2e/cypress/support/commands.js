@@ -8,11 +8,6 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-import { HomePage } from '../support/pages/home-page.js'
-import {EventPage} from '../support/pages/event-page.js';
-import {Utils} from '../support/util.js';
-import {TIMEOUT_SHORT} from "./constants";
-import {LoginPage} from "./pages/login-page";
 //
 // -- This is a parent command --
 // Cypress.Commands.add('login', (email, password) => { ... })
