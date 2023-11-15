@@ -16,12 +16,23 @@ jobs:
       - name: Cypress run
         run: npm run cypress:run -- --spec "cypress-e2e\cypress\e2e\ticket-purchase-exceptional-logged-in-user.cy.js"
         continue-on-error: true
-        
         env:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cypress run using Cypress GitHub Action
+        uses: cypress-io/github-action@v5
+        continue-on-error: true
+        with:
+            working-directory: shop
+            browser: chrome
+            record: true
+            parallel: false
+          env:
+            CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v3
