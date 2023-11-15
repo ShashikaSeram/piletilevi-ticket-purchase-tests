@@ -17,7 +17,6 @@ jobs:
         uses: cypress-io/github-action@v5
         continue-on-error: true
         with:
-          working-directory: ./scripts
           browser: chrome
           record: true
           parallel: false # Runs test in parallel using settings above
@@ -26,6 +25,9 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Dependencies
+        run: npm install
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v3
