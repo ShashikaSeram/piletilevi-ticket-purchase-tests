@@ -17,7 +17,7 @@ jobs:
         uses: cypress-io/github-action@v5
         continue-on-error: true
         with:
-          working-directory: shop
+          working-directory: piletilevi-ticket-purchase-tests
           browser: chrome
           record: true
           parallel: false # Runs test in parallel using settings above
