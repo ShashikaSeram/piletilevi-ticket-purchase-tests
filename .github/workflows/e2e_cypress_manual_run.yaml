@@ -18,14 +18,10 @@ jobs:
         continue-on-error: true
         with:
           browser: chrome
-          record: true
           parallel: false # Runs test in parallel using settings above
 
       - name: Install Dependencies
         run: npm install
-
-      - name: Run Tests with Record Key
-        run: npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v3
