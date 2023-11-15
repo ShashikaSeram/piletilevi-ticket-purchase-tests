@@ -224,6 +224,7 @@ export class TicketsSelectionPage{
    cy.get(button).contains('Submit').click({ force: true });
  }
  static verifyPromoCodeIsAppliedSuccessfully(){
+  cy.wait(5000);
    cy.get(button).contains('Change').should('be.visible');
  }
  static addTicketAppliedPromocode() {
