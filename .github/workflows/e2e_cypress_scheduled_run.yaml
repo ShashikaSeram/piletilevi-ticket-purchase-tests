@@ -2,7 +2,7 @@ name: End-to-end-test-schedule-wf
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '00 04 * * 1-5'
+    #- cron:  '00 04 * * 1-5'
 
 jobs:
   cypress-run:
